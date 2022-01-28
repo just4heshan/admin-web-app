@@ -3,6 +3,36 @@
         {
             "type": "aws-sam",
             "request": "direct-invoke",
+            "name": "Onboard-task-pt1:src/components/controls/Buttons.floatingButton (nodejs12.x)",
+            "invokeTarget": {
+                "target": "code",
+                "projectRoot": "${workspaceFolder}/",
+                "lambdaHandler": "src/components/controls/Buttons.floatingButton"
+            },
+            "lambda": {
+                "runtime": "nodejs12.x",
+                "payload": {},
+                "environmentVariables": {}
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "Onboard-task-pt1:src/components/popUp.SimpleDialog (nodejs12.x)",
+            "invokeTarget": {
+                "target": "code",
+                "projectRoot": "${workspaceFolder}/",
+                "lambdaHandler": "src/components/popUp.SimpleDialog"
+            },
+            "lambda": {
+                "runtime": "nodejs12.x",
+                "payload": {},
+                "environmentVariables": {}
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
             "name": "maali-mail:src/components/TableData.TableData (nodejs12.x)",
             "invokeTarget": {
                 "target": "code",
