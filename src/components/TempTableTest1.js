@@ -17,11 +17,20 @@ import {
   Checkbox,
   Dialog,
   DialogTitle,
-  DialogContent,
   ListItem,
 } from "@mui/material";
+import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
+import PersonIcon from "@mui/icons-material/Person";
+import EmailIcon from "@mui/icons-material/Email";
+import HomeIcon from "@mui/icons-material/Home";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import WorkIcon from "@mui/icons-material/Work";
+import { Field, reduxForm } from "redux-form";
 
-import AddCustomerForm from "./popUp";
+const onSubmit = (values) => {
+  console.log(values);
+}
 
 const useStyles = makeStyles({
   table: {
@@ -33,6 +42,19 @@ const useStyles = makeStyles({
     height: 35,
     padding: "0 30px",
   },
+  main: {
+    margin: 15,
+  },
+  inputs: {
+    width: 500,
+  },
+  secondaryInputs: {
+    width: 240,
+  },
+  test: {
+    marginLeft: 100,
+  },
+  
   // buttonStyle: {
   //   opacity: 0.9,
   // },
@@ -40,10 +62,10 @@ const useStyles = makeStyles({
 
 
 
-function TableData(props) {
+function TableData({handleSubmit}) {
   const [items, setItems] = useState([]);
   const [open, setOpen] = useState(false)
-  const [selectedValue, setSelectedValue] = useState('bob')
+  // const [selectedValue, setSelectedValue] = useState('bob')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,9 +78,28 @@ function TableData(props) {
     fetchData();
   }, []);
 
+  const style1 = {
+    color: "#00a152",
+    borderColor: "#00a152",
+  };
+
+  const style2 = {
+    marginLeft: 330,
+    backgroundColor: "#00a152",
+    opacity: 0.9,
+  };
+
+  const style3 = {
+    marginLeft: 20,
+  };
+
   const rows = items;
 
   const classes = useStyles();
+
+  const [page, setPage] = React.useState(0);
+
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const editButton = () => {
     return (
@@ -76,9 +117,107 @@ function TableData(props) {
     );
   };
 
-  const [page, setPage] = React.useState(0);
-
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const fullNameInput = (props) => {
+  return (
+    <Input
+    {...props.input}
+    // className={classes.inputs}
+    required
+    id="fullName"
+    label="Full Name"
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">
+          <PersonIcon />
+        </InputAdornment>
+      ),
+    }}
+    variant="outlined"
+    type='text'
+  />
+  );
+  };
+  
+  const emailInput = (props) => {
+  return (
+    <Input
+    {...props.input}
+    // className={classes.inputs}
+    required
+    id="email"
+    label="Email"
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">
+          <EmailIcon />
+        </InputAdornment>
+      ),
+    }}
+    // variant="outlined"
+    type='text'
+  />
+  );
+  };
+  
+  const addressInput = (props) => {
+   return (
+    <Input
+    {...props.input}
+    // className={classes.inputs}
+    id="address"
+    label="Home Address"
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">
+          <HomeIcon />
+        </InputAdornment>
+      ),
+    }}
+    // variant="outlined"
+    type='text'
+  />
+   );
+  };
+  
+  const phoneNoInput = (props) => {
+    return (
+      <Input
+      {...props.input}
+      // className={classes.secondaryInputs}
+      id="phone"
+      label="Phone Number"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <LocalPhoneIcon />
+          </InputAdornment>
+        ),
+      }}
+      // variant="outlined"
+      type='text'
+    />
+    );
+  };
+  
+  const jobTitleInput = (props) => {
+    return (
+      <Input
+    {...props.input}
+    // className={classes.secondaryInputs}
+    id="job"
+    label="Job Title"
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">
+          <WorkIcon />
+        </InputAdornment>
+      ),
+    }}
+    // variant="outlined"
+    type='text'
+  />
+    );
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -177,16 +316,42 @@ function TableData(props) {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </TableContainer>
-        <AddCustomerForm 
-          selectedValue= {selectedValue}
-          open={open}
-          onClose={handleClose}
+        <Dialog onClose={handleClose} open={open}>
+      <DialogTitle>Add New Customer</DialogTitle>
+      <ListItem>
+      <form onSubmit={handleSubmit}>
+          <div className={classes.main}>
+            <Field name="nameInput" component={fullNameInput} />
+          </div>
+          <div className={classes.main}>
+            <Field name="emailInput" component={emailInput} />
+          </div>
+          <div className={classes.main}>
+            <Field name="addressInput" component={addressInput} />
+          </div>
+          <div className={classes.main}>
+            <Field name="phoneNoInput" component={phoneNoInput} />
+            <Field name="jobTitleInput" component={jobTitleInput} />
+          </div>
+          <div className={classes.main}>
+            <Button style={style1} variant="outlined">
+              Reset
+            </Button>
+            <Button style={style2}  type="submit"  variant="contained">
+              Submit
+            </Button>
+          </div>
+        </form>
+      </ListItem>
+    </Dialog>
 
-        />
       </div>
       <div onClick={popUpFormHandler}>{floatingButton()}</div>
     </div>
   );
 }
 
-export default TableData;
+export default reduxForm({
+  form: 'add-customer-form',
+  onSubmit,
+})(TableData);;
