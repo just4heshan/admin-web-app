@@ -3,7 +3,6 @@ import { Dialog, DialogTitle, ListItem } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { makeStyles } from "@mui/styles";
 import { Button } from "@mui/material";
-import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
@@ -11,7 +10,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import WorkIcon from "@mui/icons-material/Work";
 import { Field, reduxForm } from "redux-form";
-import { useState } from "react";
+
+
 
 const useStyles = makeStyles({
   main: {
@@ -30,16 +30,14 @@ const onSubmit = (values) => {
   console.log(values);
 };
 
-const fullNameInput = (props) => {
+
+const fullNameInput = ({input}) => {
  
   return (
     <TextField
-      {...props.input}
+      {...input}
       fullWidth
-      required
-      id="fullName"
       label="Full Name"
-      floatingLabelText="Full Name"
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -48,18 +46,15 @@ const fullNameInput = (props) => {
         ),
       }}
       variant="outlined"
-      type="string"
     />
   );
 };
 
-const emailInput = (props) => {
+const emailInput = ({input}) => {
   return (
     <TextField
-      {...props.input}
+      {...input}
       fullWidth
-      required
-      id="email"
       label="Email"
       InputProps={{
         startAdornment: (
@@ -69,17 +64,15 @@ const emailInput = (props) => {
         ),
       }}
       variant="outlined"
-      type="string"
     />
   );
 };
 
-const addressInput = (props) => {
+const addressInput = ({input}) => {
   return (
     <TextField
-      {...props.input}
+      {...input}
       fullWidth
-      id="address"
       label="Home Address"
       InputProps={{
         startAdornment: (
@@ -89,16 +82,14 @@ const addressInput = (props) => {
         ),
       }}
       variant="outlined"
-      type="string"
     />
   );
 };
 
-const phoneNoInput = (props) => {
+const phoneNoInput = ({input}) => {
   return (
     <TextField
-      {...props.input}
-      id="phone"
+      {...input}
       label="Phone Number"
       InputProps={{
         startAdornment: (
@@ -108,17 +99,15 @@ const phoneNoInput = (props) => {
         ),
       }}
       variant="outlined"
-      type="string"
     />
   );
 };
 
-const jobTitleInput = (props) => {
+const jobTitleInput = ({input}) => {
   return (
     <TextField
+      {...input}
       style={style3}
-      {...props.input}
-      id="job"
       label="Job Title"
       InputProps={{
         startAdornment: (
@@ -128,30 +117,19 @@ const jobTitleInput = (props) => {
         ),
       }}
       variant="outlined"
-      type="string"
     />
   );
 };
 
-const validate = values => {
-  const errors = {}
-  const requiredFields = [ 'fullName', 'email' ]
-  requiredFields.forEach(field => {
-    if (!values[ field ]) {
-      errors[ field ] = 'Required'
-    }
-  })
-  if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
-  }
-  return errors
-}
+const emailValidate = value =>
+  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
+  'Invalid email address' : undefined
 
-function AddCustomerForm(props, { handleSubmit, valid }) {
-  const { onClose, selectedValue, open } = props;
+function AddCustomerForm(props, {handleSubmit, pristine, reset, submitting}) {
+  const { onClose, open } = props;
 
   const handleClose = () => {
-    onClose(selectedValue);
+    onClose();
   };
 
   const classes = useStyles();
@@ -172,25 +150,27 @@ function AddCustomerForm(props, { handleSubmit, valid }) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Add New Customer</DialogTitle>
       <ListItem>
-        <form onSubmit={handleSubmit}>
+        <form 
+          onSubmit={handleSubmit}
+        >
           <div className={classes.inputs}>
-            <Field name="nameInput" component={fullNameInput} value={props.value} />
+            <Field name="nameInput" component={fullNameInput}  type="text" placeholder="First Name" />
           </div>
           <div className={classes.inputs}>
-            <Field name="emailInput" component={emailInput} value={props.value} />
+            <Field name="emailInput" component={emailInput}  type="email" />
           </div>
           <div className={classes.inputs}>
-            <Field name="addressInput" component={addressInput} value={props.value} />
+            <Field name="addressInput" component={addressInput}  type="text" />
           </div>
           <div className={classes.inputs}>
-            <Field name="phoneNoInput" component={phoneNoInput} value={props.value} />
-            <Field name="jobTitleInput" component={jobTitleInput} value={props.value} />
+            <Field name="phoneNoInput" component={phoneNoInput}  type="text" />
+            <Field name="jobTitleInput" component={jobTitleInput}  type="text" />
           </div>
           <div className={classes.main}>
-            <Button style={style1} variant="outlined">
+            <Button style={style1} disabled={pristine || submitting} onClick={reset} variant="outlined">
               Reset
             </Button>
-            <Button style={style2} type="submit" variant="contained" disabled={!valid} >
+            <Button style={style2} type="submit" variant="contained" disabled={pristine || submitting}  >
               Submit
             </Button>
           </div>
@@ -201,8 +181,8 @@ function AddCustomerForm(props, { handleSubmit, valid }) {
 }
 
 export default reduxForm({
-  form: "add-customer-form",
-  validate,
+  form: 'add-customer-form',
+  emailValidate,
   onSubmit,
   
 })(AddCustomerForm);

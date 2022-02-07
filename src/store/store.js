@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import rootReducer from './dummyReducer'
+import { reducer as formReducer} from 'redux-form';
+// import addInfoReducer from './slices/addInfoSlice'
 
 const store = configureStore({
-    reducer: {rootReducer},
-})
+    reducer: { form: formReducer }, 
+
+});
 
 export default store;

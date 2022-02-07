@@ -10,7 +10,7 @@ const INITIAL_STATE = {
 }
 
 const formSlice = createSlice({
-    name: 'customer-form',
+    name: 'customerForm',
     INITIAL_STATE,
     reducers: {
         fNameState(state){
@@ -31,6 +31,6 @@ const formSlice = createSlice({
     }
 });
 
-const store = createSlice(formSlice.reducer)
+export const customerFormActions = formSlice.actions;
 
-export default store;
+export default formSlice.reducer;

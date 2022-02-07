@@ -15,10 +15,6 @@ import {
   Paper,
   TablePagination,
   Checkbox,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  ListItem,
 } from "@mui/material";
 
 import AddCustomerForm from "./popUp";
@@ -43,7 +39,6 @@ const useStyles = makeStyles({
 function TableData(props) {
   const [items, setItems] = useState([]);
   const [open, setOpen] = useState(false)
-  const [selectedValue, setSelectedValue] = useState('bob')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -178,7 +173,6 @@ function TableData(props) {
           />
         </TableContainer>
         <AddCustomerForm 
-          selectedValue= {selectedValue}
           open={open}
           onClose={handleClose}
 
