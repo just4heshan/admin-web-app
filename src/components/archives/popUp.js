@@ -9,7 +9,9 @@ import EmailIcon from "@mui/icons-material/Email";
 import HomeIcon from "@mui/icons-material/Home";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import WorkIcon from "@mui/icons-material/Work";
-import { Field, reduxForm } from "redux-form";
+import { Field, reduxForm } from 'redux-form'
+
+import validate from '../store/validate'
 
 
 
@@ -20,6 +22,9 @@ const useStyles = makeStyles({
   inputs: {
     margin: 15,
   },
+  inputSecondary: {
+    margin:15,
+  }
 });
 
 const style3 = {
@@ -31,10 +36,11 @@ const onSubmit = (values) => {
 };
 
 
-const fullNameInput = ({input}) => {
+const fullNameInput = ({input, meta: { asyncValidating, touched, error }}) => {
  
   return (
-    <TextField
+  <div >
+      <TextField
       {...input}
       fullWidth
       label="Full Name"
@@ -47,12 +53,15 @@ const fullNameInput = ({input}) => {
       }}
       variant="outlined"
     />
+    {touched && error && <span>{error}</span>}
+  </div>
   );
 };
 
-const emailInput = ({input}) => {
+const emailInput = ({input, meta: { asyncValidating, touched, error }}) => {
   return (
-    <TextField
+    <div >
+      <TextField
       {...input}
       fullWidth
       label="Email"
@@ -65,12 +74,15 @@ const emailInput = ({input}) => {
       }}
       variant="outlined"
     />
+    {touched && error && <span>{error}</span>}
+    </div>
   );
 };
 
 const addressInput = ({input}) => {
   return (
-    <TextField
+    <div>
+      <TextField
       {...input}
       fullWidth
       label="Home Address"
@@ -83,12 +95,14 @@ const addressInput = ({input}) => {
       }}
       variant="outlined"
     />
+    </div>
   );
 };
 
 const phoneNoInput = ({input}) => {
   return (
-    <TextField
+    <div>
+      <TextField
       {...input}
       label="Phone Number"
       InputProps={{
@@ -100,12 +114,14 @@ const phoneNoInput = ({input}) => {
       }}
       variant="outlined"
     />
+    </div>
   );
 };
 
 const jobTitleInput = ({input}) => {
   return (
-    <TextField
+    <div>
+      <TextField
       {...input}
       style={style3}
       label="Job Title"
@@ -118,15 +134,16 @@ const jobTitleInput = ({input}) => {
       }}
       variant="outlined"
     />
+    </div>
   );
 };
 
-const emailValidate = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
-  'Invalid email address' : undefined
+// const emailValidate = value =>
+//   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
+//   'Invalid email address' : undefined
 
-function AddCustomerForm(props, {handleSubmit, pristine, reset, submitting}) {
-  const { onClose, open } = props;
+function AddCustomerForm(props) {
+  const { handleSubmit, pristine, reset, submitting, onClose, open } = props;
 
   const handleClose = () => {
     onClose();
@@ -151,7 +168,11 @@ function AddCustomerForm(props, {handleSubmit, pristine, reset, submitting}) {
       <DialogTitle>Add New Customer</DialogTitle>
       <ListItem>
         <form 
+          component="form"
           onSubmit={handleSubmit}
+          sx={{
+            '& .MuiTextField-root': { m: 1, width: '15ch' },
+          }}
         >
           <div className={classes.inputs}>
             <Field name="nameInput" component={fullNameInput}  type="text" placeholder="First Name" />
@@ -162,15 +183,15 @@ function AddCustomerForm(props, {handleSubmit, pristine, reset, submitting}) {
           <div className={classes.inputs}>
             <Field name="addressInput" component={addressInput}  type="text" />
           </div>
-          <div className={classes.inputs}>
+          <div className={classes.inputSecondary}>
             <Field name="phoneNoInput" component={phoneNoInput}  type="text" />
             <Field name="jobTitleInput" component={jobTitleInput}  type="text" />
           </div>
           <div className={classes.main}>
-            <Button style={style1} disabled={pristine || submitting} onClick={reset} variant="outlined">
+            <Button style={style1} type="button" disabled={pristine || submitting} onClick={reset} variant="outlined">
               Reset
             </Button>
-            <Button style={style2} type="submit" variant="contained" disabled={pristine || submitting}  >
+            <Button style={style2} type="submit" variant="contained" disabled={submitting}  >
               Submit
             </Button>
           </div>
@@ -180,9 +201,10 @@ function AddCustomerForm(props, {handleSubmit, pristine, reset, submitting}) {
   );
 }
 
+
 export default reduxForm({
-  form: 'add-customer-form',
-  emailValidate,
+  form: 'addCustomerDetails',
+  validate,
   onSubmit,
   
 })(AddCustomerForm);

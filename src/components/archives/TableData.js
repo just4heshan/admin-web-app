@@ -43,7 +43,7 @@ function TableData(props) {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        "http://malih-auth.ap-southeast-2.elasticbeanstalk.com/campaign/getAllUploadedEmails/listId/480"
+        "http://malih-auth.ap-southeast-2.elasticbeanstalk.com/api/v1/getAllUploadedEmails/listId/480"
       );
       setItems(response.data);
       console.log(response.data);
